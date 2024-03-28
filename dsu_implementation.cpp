@@ -32,4 +32,10 @@ void merge(ll u, ll v) {
   sz[cv] += sz[cu];
   nedges[cv] += nedges[cu];
 }
-  
+
+
+// Important Note  Before using this initialize this
+// for(ll i=0; i<n; i++) {
+//     sz[i] = 1;label[i] = i; 
+// }
+
