@@ -47,3 +47,36 @@ struct dijkstra {
     }
   }
 };
+
+------------------------------------------------------- 2nd 
+	vector<pair<ll, ll>> edges[100005];
+ll dists[100005];
+ll vis[100005];
+
+void dijkstra(ll source) {
+    for(ll i=0; i<n; i++){
+        dists[i] = 1e18;
+        vis[i] = 0;
+    }
+    
+    priority_queue<pair<ll, ll>, vector<pair<ll,ll>>, greater<pair<ll,ll>>> pq;
+    dists[source] = 0;
+    pq.push({0, source})
+    
+    while(!pq.empty()) {
+        pair<ll,ll> cur = pq.top();
+        pq.pop();
+        
+        ll dist = cur.f, targ = cur.s;
+        if(vis[targ]) continue;
+        vis[targ] = 1;
+        
+        for(pair<ll, ll> x: edges[targ]) {
+            ll ndist = dist + x.s;
+            if(ndist < dists[x.f) {
+                dists[x.f] = ndist;
+                pq.push({dists[x.f], x.f});
+            }
+        }
+    }
+}
