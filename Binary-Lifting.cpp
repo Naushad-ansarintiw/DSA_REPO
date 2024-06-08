@@ -14,21 +14,25 @@ public:
         depth.assign(n, 0);
     }
 
+    void dfs(int node, int parent) {
+        for (int neighbor : adj[node]) {
+            if (neighbor != parent) {
+                depth[neighbor] = depth[node] + 1;
+                dfs(neighbor, node);
+            }
+        }
+    }
+
     void preprocess(const vector<vector<int>>& adj, const vector<int>& parent) {
         // Initializing the immediate parent and depth for each node
         for (int i = 0; i < n; ++i) {
-            if (parent[i] != -1) {
                 up[0][i] = parent[i];
-                depth[i] = depth[parent[i]] + 1;
-            }
         }
 
         // Building the binary lifting table
         for (int i = 1; i < LOG; ++i) {
             for (int node = 0; node < n; ++node) {
-                if (up[i - 1][node] != -1) {
                     up[i][node] = up[i - 1][up[i - 1][node]];
-                }
             }
         }
     }
@@ -37,7 +41,6 @@ public:
         for (int i = 0; i < LOG; ++i) {
             if (k & (1 << i)) {
                 node = up[i][node];
-                if (node == -1) break;
             }
         }
         return node;
@@ -51,7 +54,9 @@ public:
         if (u == v) return u;
 
         for (int i = LOG - 1; i >= 0; --i) {
-            if (up[i][u] != up[i][v]) {
+            int ujump = up[i][u];
+            int vjump = up[i][v];
+            if (ujump != vjump) {
                 u = up[i][u];
                 v = up[i][v];
             }
@@ -89,6 +94,7 @@ int main() {
 
     BinaryLifting bl(n);
     bl.preprocess(adj, parent);
+    bl.dfs(0, -1);
 
     // Example queries
     int u, v;
