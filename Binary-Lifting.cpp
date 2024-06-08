@@ -8,10 +8,10 @@ private:
     vector<int> depth;       // Depth of each node
 
     void dfs(int node, int parent, const vector<vector<int>>& adj) {
-        up[node][0] = parent;
+        up[0][node] = parent;
         for (int i = 1; i <= LOG; ++i) {
-            if (up[node][i-1] != -1) {
-                up[node][i] = up[up[node][i-1]][i-1];
+            if (up[i-1][node] != -1) {
+                up[i][node] = up[i-1][up[i-1][node]];
             }
         }
         for (int neighbor : adj[node]) {
@@ -25,7 +25,7 @@ private:
 public:
     BinaryLifting(int _n) : n(_n) {
         LOG = log2(n) + 1;
-        up.assign(n, vector<int>(LOG + 1, -1));
+        up.assign(LOG + 1, vector<int>(n, -1));
         depth.assign(n, 0);
     }
 
@@ -36,7 +36,7 @@ public:
     int getKthAncestor(int node, int k) {
         for (int i = 0; i <= LOG; ++i) {
             if (k & (1 << i)) {
-                node = up[node][i];
+                node = up[i][node];
                 if (node == -1) break;
             }
         }
@@ -51,12 +51,12 @@ public:
         if (u == v) return u;
 
         for (int i = LOG; i >= 0; --i) {
-            if (up[u][i] != up[v][i]) {
-                u = up[u][i];
-                v = up[v][i];
+            if (up[i][u] != up[i][v]) {
+                u = up[i][u];
+                v = up[i][v];
             }
         }
-        return up[u][0];
+        return up[0][u];
     }
 
     int getDepth(int node) {
