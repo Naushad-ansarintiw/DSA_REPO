@@ -13,6 +13,7 @@ trieNode* getNode() {
   for(int i=0; i<26; i++) {
       newNode->children[i] = NULL;
   }
+  return newNode;
 }
 
 void insert(trieNode* root, string& word) {
